@@ -9,6 +9,9 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import org.androidannotations.annotations.EActivity;
+
+
 public class MainActivity extends AppCompatActivity {
 
     @Override
