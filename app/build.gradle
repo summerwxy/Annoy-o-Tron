@@ -6,7 +6,7 @@ android {
 
     defaultConfig {
         applicationId "fun.wxy.annoy_o_tron"
-        minSdkVersion 15
+        minSdkVersion 21
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
@@ -68,3 +68,4 @@ apt {
 }
 
 // === end of Android Annotations ===
+
