@@ -6,15 +6,15 @@
             android:id="@+id/navi_item_1"
             android:checked="true"
             android:icon="@drawable/ic_bug_report_black_24dp"
-            android:title="Bug"/>
+            android:title="Short title"/>
         <item
             android:id="@+id/navi_item_2"
             android:icon="@drawable/ic_extension_black_24dp"
-            android:title="Extension"/>
+            android:title="A little longer title"/>
         <item
             android:id="@+id/navi_item_3"
             android:icon="@drawable/ic_settings_black_24dp"
-            android:title="Settings"/>
+            android:title="A very long title that will truncate automatic by android......."/>
 
     </group>
 

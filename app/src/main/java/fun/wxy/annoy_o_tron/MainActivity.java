@@ -1,5 +1,7 @@
 package fun.wxy.annoy_o_tron;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -11,10 +13,13 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import org.androidannotations.annotations.EActivity;
+
+import fun.wxy.annoy_o_tron.utils._;
 
 
 // @EActivity(R.layout.activity_main)
@@ -55,7 +60,16 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
+                // TODO: 應該放到 drawer 的 onDraw 之類的地方去 不過不知道怎麼寫
+                // avatar
+                ImageView avatar = (ImageView) findViewById(R.id.avatar);
+                Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.baobao);
+                bitmap = _.toSquare(bitmap);
+                bitmap = _.scaleBitmap(bitmap, 160);
+                bitmap = _.roundCorner(bitmap, 9999.f);
+                avatar.setImageBitmap(bitmap);
             }
+
         };
 
         drawerLayout.setDrawerListener(actionBarDrawerToggle);
@@ -66,9 +80,11 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(MainActivity.this, "Fac Clicked!", Toast.LENGTH_LONG);
+                Toast.makeText(MainActivity.this, "Float action button Clicked!", Toast.LENGTH_LONG).show();
             }
         });
+
+
 
         /*
         super.onCreate(savedInstanceState);
