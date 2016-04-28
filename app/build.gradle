@@ -69,3 +69,7 @@ apt {
 
 // === end of Android Annotations ===
 
+// === RecyclerView ===
+dependencies {
+    compile 'com.android.support:recyclerview-v7:+'
+}
