@@ -68,11 +68,39 @@
             android:layout_height="match_parent"
             android:layout_marginTop="@dimen/abc_action_bar_default_height_material"
             android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <EditText
+                    android:id="@+id/edit_message"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/edit_message"
+                    android:layout_weight="1" />
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/button_send"
+                    android:onClick="sendMessage"/>
+            </LinearLayout>
+
             <TextView
                 android:id="@+id/content_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Hello! Hello! Hello!"/>
+            <Button
+                android:id="@+id/add_btn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="ADD"/>
+            <Button
+                android:id="@+id/del_btn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="DEL"/>
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/recyclerView"
                 android:layout_width="match_parent"

@@ -1,5 +1,6 @@
 package fun.wxy.annoy_o_tron;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -10,13 +11,19 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.MenuItem;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.util.List;
 
 import fun.wxy.annoy_o_tron.list.Contact;
 import fun.wxy.annoy_o_tron.utils._;
@@ -25,6 +32,7 @@ import fun.wxy.annoy_o_tron.utils._;
 // @EActivity(R.layout.activity_main)
 public class MainActivity extends AppCompatActivity {
 
+    public final static String EXTRA_MESSAGE = "fun.wxy.annoy_o_tron.MESSAGE";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,13 +99,41 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
         // adapter and recyclerview
         RecyclerView rvContacts = (RecyclerView) findViewById(R.id.recyclerView);
-
-        Contact.ContactsAdapter adapter = new Contact().new ContactsAdapter(Contact.generateSampleList());
+        final List<Contact.ContactModel> list = Contact.generateSampleList();
+        final Contact.ContactsAdapter adapter = new Contact().new ContactsAdapter(list);
         rvContacts.setAdapter(adapter);
-        rvContacts.setLayoutManager(new GridLayoutManager(this, 3));
+        rvContacts.setLayoutManager(new LinearLayoutManager(this));
+
+        // add and del button
+        Button addBtn = (Button) findViewById(R.id.add_btn);
+        Button delBtn = (Button) findViewById(R.id.del_btn);
+        addBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Contact.ContactModel contact = new Contact().new ContactModel();
+                contact.setName("Lin Yu Wei");
+                list.add(3, contact);
+                adapter.notifyItemInserted(3);
+            }
+        });
+        delBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                list.remove(0);
+                adapter.notifyItemRemoved(0);
+            }
+        });
+
+    }
+
+    public void sendMessage(View view) {
+        Intent intent = new Intent(this, DisplayMessageActivity.class);
+        EditText editText = (EditText) findViewById(R.id.edit_message);
+        String msg = editText.getText().toString();
+        intent.putExtra(EXTRA_MESSAGE, msg);
+        startActivity(intent);
     }
 
     /*

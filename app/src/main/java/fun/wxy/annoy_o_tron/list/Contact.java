@@ -29,7 +29,7 @@ public class Contact {
         private String name;
     }
 
-    // generate tool
+    // generate tool for test
     public static List<ContactModel> generateSampleList() {
         List<ContactModel> result = new ArrayList<>();
         for (int i = 0; i < 200; i++) {
@@ -40,17 +40,18 @@ public class Contact {
         return result;
     }
 
-    // adapter
-    public class ContactsAdapter extends RecyclerView.Adapter<Contact.ContactsAdapter.ViewHolder> {
-        // view holder
-        public class ViewHolder extends RecyclerView.ViewHolder{
-            public TextView nameTextView;
-            public ViewHolder(View itemView){
-                super(itemView);
+    // view holder
+    public class ViewHolder extends RecyclerView.ViewHolder{
+        public TextView nameTextView;
+        public ViewHolder(View itemView){
+            super(itemView);
+            nameTextView = (TextView) itemView.findViewById(R.id.tv_name);
 
-                nameTextView = (TextView) itemView.findViewById(R.id.tv_name);
-            }
         }
+    }
+
+    // adapter
+    public class ContactsAdapter extends RecyclerView.Adapter<Contact.ViewHolder> {
         // constructer & getItemCount
         private List<ContactModel> mContacts;
 
@@ -63,14 +64,12 @@ public class Contact {
             return mContacts.size();
         }
 
-
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
             Context context = viewGroup.getContext();
+
             View contactView = LayoutInflater.from(context).inflate(R.layout.item_contact, viewGroup, false);
-
             ViewHolder viewHolder = new ViewHolder(contactView);
-
             return viewHolder;
         }
 
