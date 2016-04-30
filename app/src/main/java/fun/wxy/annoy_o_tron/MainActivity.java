@@ -1,26 +1,19 @@
 package fun.wxy.annoy_o_tron;
 
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.MenuItem;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.List;
@@ -39,14 +32,16 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        final TextView contentView = (TextView) findViewById(R.id.content_view);
+        //final TextView contentView = (TextView) findViewById(R.id.content_view);
         final DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+
         NavigationView view = (NavigationView) findViewById(R.id.navigation_view);
+
         view.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(MenuItem item) {
                 Toast.makeText(MainActivity.this, item.getTitle() + " pressed", Toast.LENGTH_LONG).show();
-                contentView.setText(item.getTitle());
+                //contentView.setText(item.getTitle());
 
                 item.setChecked(true);
                 drawerLayout.closeDrawers();
@@ -89,6 +84,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // Toast.makeText(MainActivity.this, "Float action button Clicked!", Toast.LENGTH_LONG).show();
+                /*
                 Snackbar.make(contentView, "I am snackbar. a very very very very very very very very very very very very very very very very long snackbar.", Snackbar.LENGTH_SHORT)
                         .setAction("Undo", new View.OnClickListener() {
                             @Override
@@ -96,6 +92,7 @@ public class MainActivity extends AppCompatActivity {
                                 // do something.
                             }
                         }).show();
+                */
             }
         });
 
@@ -106,6 +103,7 @@ public class MainActivity extends AppCompatActivity {
         rvContacts.setAdapter(adapter);
         rvContacts.setLayoutManager(new LinearLayoutManager(this));
 
+        /*
         // add and del button
         Button addBtn = (Button) findViewById(R.id.add_btn);
         Button delBtn = (Button) findViewById(R.id.del_btn);
@@ -125,9 +123,11 @@ public class MainActivity extends AppCompatActivity {
                 adapter.notifyItemRemoved(0);
             }
         });
+        */
 
     }
 
+    /*
     public void sendMessage(View view) {
         Intent intent = new Intent(this, DisplayMessageActivity.class);
         EditText editText = (EditText) findViewById(R.id.edit_message);
@@ -135,6 +135,7 @@ public class MainActivity extends AppCompatActivity {
         intent.putExtra(EXTRA_MESSAGE, msg);
         startActivity(intent);
     }
+    */
 
     /*
     @Override

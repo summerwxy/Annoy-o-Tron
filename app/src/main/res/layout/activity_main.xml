@@ -45,15 +45,45 @@
     android:fitsSystemWindows="true">
     <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
+        android:layout_height="match_parent">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerView"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/abc_action_bar_default_height_material"
-            android:background="?attr/colorPrimary"
-            android:minHeight="?attr/actionBarSize"
-            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+
+        <!-- appbar section -->
+        <android.support.design.widget.AppBarLayout
+            android:id="@+id/appbar_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+
+            <android.support.design.widget.CollapsingToolbarLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_scrollFlags="scroll|snap|exitUntilCollapsed"
+                app:contentScrim="?attr/colorPrimary"
+                app:expandedTitleMarginStart="4dp"
+                app:expandedTitleMarginEnd="8dp">
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="160dp"
+                    android:src="@drawable/baobao"
+                    android:scaleType="centerCrop"
+                    android:fitsSystemWindows="true"
+                    app:layout_collapseMode="parallax"/>
+                <android.support.v7.widget.Toolbar
+                    android:id="@+id/toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="?attr/actionBarSize"
+                    app:layout_collapseMode="pin"/>
+            </android.support.design.widget.CollapsingToolbarLayout>
+
+        </android.support.design.widget.AppBarLayout>
+
+        <!-- floating action button section -->
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/fab"
             android:layout_width="wrap_content"
@@ -62,13 +92,17 @@
             android:src="@drawable/ic_add_white_24dp"
             android:elevation="6dp"
             android:layout_margin="16dp"
-            app:pressedTranslationZ="12dp"/>
+            app:pressedTranslationZ="12dp"
+            app:layout_behavior="fun.wxy.annoy_o_tron.behavior.ScrollingFabBehavior"/>
+
+        <!--
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="@dimen/abc_action_bar_default_height_material"
+            android:layout_marginTop="@dimen/fab_margin"
             android:orientation="vertical">
-
+            -->
+            <!--
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -85,12 +119,15 @@
                     android:text="@string/button_send"
                     android:onClick="sendMessage"/>
             </LinearLayout>
-
+            -->
+            <!--
             <TextView
                 android:id="@+id/content_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Hello! Hello! Hello!"/>
+            -->
+            <!--
             <Button
                 android:id="@+id/add_btn"
                 android:layout_width="match_parent"
@@ -101,11 +138,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="DEL"/>
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/recyclerView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+            -->
+        <!--
         </LinearLayout>
+        -->
     </android.support.design.widget.CoordinatorLayout>
     <android.support.design.widget.NavigationView
         android:id="@+id/navigation_view"
