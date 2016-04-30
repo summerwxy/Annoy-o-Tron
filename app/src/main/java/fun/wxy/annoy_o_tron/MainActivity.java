@@ -3,6 +3,7 @@ package fun.wxy.annoy_o_tron;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -41,15 +42,19 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onNavigationItemSelected(MenuItem item) {
                 Fragment frag = null;
+                int bgc = 0x0;
                 if (item.getItemId() == R.id.navi_home) {
                     frag = new HomeFragment();
-
+                    bgc = 0x0;
                 } else if (item.getItemId() == R.id.navi_ship) {
                     frag = new ShipFragment();
+                    bgc = 0xffff4444;
                 }
 
                 if (frag != null) {
-                    getSupportFragmentManager().beginTransaction().replace(R.id.content_layout, new HomeFragment()).commit();
+                    getSupportFragmentManager().beginTransaction().replace(R.id.content_layout, frag).commit();
+                    CollapsingToolbarLayout tbl = (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout);
+                    tbl.setContentScrimColor(bgc);
                 } else {
                     Toast.makeText(MainActivity.this, item.getTitle() + " pressed", Toast.LENGTH_LONG).show();
                 }
@@ -122,39 +127,10 @@ public class MainActivity extends AppCompatActivity {
         getSupportFragmentManager().beginTransaction().replace(R.id.content_layout, fragment).commit();
 
 
-        /*
-        // add and del button
-        Button addBtn = (Button) findViewById(R.id.add_btn);
-        Button delBtn = (Button) findViewById(R.id.del_btn);
-        addBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Contact.ContactModel contact = new Contact().new ContactModel();
-                contact.setName("Lin Yu Wei");
-                list.add(3, contact);
-                adapter.notifyItemInserted(3);
-            }
-        });
-        delBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                list.remove(0);
-                adapter.notifyItemRemoved(0);
-            }
-        });
-        */
+
 
     }
 
-    /*
-    public void sendMessage(View view) {
-        Intent intent = new Intent(this, DisplayMessageActivity.class);
-        EditText editText = (EditText) findViewById(R.id.edit_message);
-        String msg = editText.getText().toString();
-        intent.putExtra(EXTRA_MESSAGE, msg);
-        startActivity(intent);
-    }
-    */
 
     /*
     @Override

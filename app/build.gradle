@@ -74,23 +74,11 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:+'
 }
 
-// === manage layouts ===
-dependencies {
-    compile 'com.android.support:support-v4:23.+'
+// add Material Date and Time Picker with Range Selection
+repositories {
+    jcenter()
 }
+
 dependencies {
-    compile 'com.android.support:support-v4:23.+'
-}
-android {
-    sourceSets {
-        main {
-            res.srcDirs =
-                    [
-                            'src/main/res/layouts/main',
-                            'src/main/res/layouts/test',
-                            'src/main/res/layouts',
-                            'src/main/res'
-                    ]
-        }
-    }
+    compile 'com.borax12.materialdaterangepicker:library:1.6'
 }
