@@ -6,4 +6,6 @@
     <string name="edit_message">Enter a message</string>
     <string name="button_send">Send</string>
     <string name="title_activity_display_message">My Message</string>
+
+    <string name="fragment_home_greetings">Welcome to use my app</string>
 </resources>

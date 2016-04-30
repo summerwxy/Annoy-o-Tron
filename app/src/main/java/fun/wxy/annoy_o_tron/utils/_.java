@@ -1,5 +1,6 @@
 package fun.wxy.annoy_o_tron.utils;
 
+import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
@@ -8,6 +9,9 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.support.v4.app.Fragment;
+
+import fun.wxy.annoy_o_tron.R;
 
 /**
  * Created by 0_o on 2016/4/27.
@@ -51,4 +55,5 @@ public class _ {
         Bitmap result = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
         return result;
     }
+
 }

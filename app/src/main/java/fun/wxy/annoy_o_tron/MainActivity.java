@@ -5,6 +5,7 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -13,6 +14,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.MenuItem;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -32,20 +34,28 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //final TextView contentView = (TextView) findViewById(R.id.content_view);
+
         final DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-
         NavigationView view = (NavigationView) findViewById(R.id.navigation_view);
-
         view.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(MenuItem item) {
-                Toast.makeText(MainActivity.this, item.getTitle() + " pressed", Toast.LENGTH_LONG).show();
-                //contentView.setText(item.getTitle());
+                Fragment frag = null;
+                if (item.getItemId() == R.id.navi_home) {
+                    frag = new HomeFragment();
 
+                } else if (item.getItemId() == R.id.navi_ship) {
+                    frag = new ShipFragment();
+                }
+
+                if (frag != null) {
+                    getSupportFragmentManager().beginTransaction().replace(R.id.content_layout, new HomeFragment()).commit();
+                } else {
+                    Toast.makeText(MainActivity.this, item.getTitle() + " pressed", Toast.LENGTH_LONG).show();
+                }
                 item.setChecked(true);
-                drawerLayout.closeDrawers();
 
+                drawerLayout.closeDrawers();
                 return true;
             }
         });
@@ -96,12 +106,21 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        /*
         // adapter and recyclerview
         RecyclerView rvContacts = (RecyclerView) findViewById(R.id.recyclerView);
         final List<Contact.ContactModel> list = Contact.generateSampleList();
         final Contact.ContactsAdapter adapter = new Contact().new ContactsAdapter(list);
         rvContacts.setAdapter(adapter);
         rvContacts.setLayoutManager(new LinearLayoutManager(this));
+        */
+
+
+
+        // use HomeFragment by default
+        HomeFragment fragment = new HomeFragment();
+        getSupportFragmentManager().beginTransaction().replace(R.id.content_layout, fragment).commit();
+
 
         /*
         // add and del button
