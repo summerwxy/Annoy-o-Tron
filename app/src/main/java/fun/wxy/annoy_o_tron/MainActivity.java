@@ -91,8 +91,8 @@ public class MainActivity extends AppCompatActivity {
         /*
         // adapter and recyclerview
         RecyclerView rvContacts = (RecyclerView) findViewById(R.id.recyclerView);
-        final List<Contact.ContactModel> list = Contact.generateSampleList();
-        final Contact.ContactsAdapter adapter = new Contact().new ContactsAdapter(list);
+        final List<ContactList.ContactModel> list = ContactList.generateSampleList();
+        final ContactList.ContactsAdapter adapter = new ContactList().new ContactsAdapter(list);
         rvContacts.setAdapter(adapter);
         rvContacts.setLayoutManager(new LinearLayoutManager(this));
         */

@@ -15,7 +15,7 @@ import fun.wxy.annoy_o_tron.R;
 /**
  * Created by 0_o on 2016/4/28.
  */
-public class Contact {
+public class ContactList {
     // model
     public class ContactModel {
         public String getName() {
@@ -33,7 +33,7 @@ public class Contact {
     public static List<ContactModel> generateSampleList() {
         List<ContactModel> result = new ArrayList<>();
         for (int i = 0; i < 200; i++) {
-            ContactModel it = new Contact().new ContactModel();
+            ContactModel it = new ContactList().new ContactModel();
             it.setName("Name - " + i);
             result.add(it);
         }
@@ -51,7 +51,7 @@ public class Contact {
     }
 
     // adapter
-    public class ContactsAdapter extends RecyclerView.Adapter<Contact.ViewHolder> {
+    public class ContactsAdapter extends RecyclerView.Adapter<ContactList.ViewHolder> {
         // constructer & getItemCount
         private List<ContactModel> mContacts;
 
