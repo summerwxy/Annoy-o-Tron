@@ -10,19 +10,13 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.MenuItem;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import java.util.List;
-
-import fun.wxy.annoy_o_tron.list.Contact;
-import fun.wxy.annoy_o_tron.utils._;
+import fun.wxy.annoy_o_tron.utils.U;
 
 
 // @EActivity(R.layout.activity_main)
@@ -41,25 +35,8 @@ public class MainActivity extends AppCompatActivity {
         view.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(MenuItem item) {
-                Fragment frag = null;
-                int bgc = 0x0;
-                if (item.getItemId() == R.id.navi_home) {
-                    frag = new HomeFragment();
-                    bgc = 0x0;
-                } else if (item.getItemId() == R.id.navi_ship) {
-                    frag = new ShipFragment();
-                    bgc = 0xffff4444;
-                }
-
-                if (frag != null) {
-                    getSupportFragmentManager().beginTransaction().replace(R.id.content_layout, frag).commit();
-                    CollapsingToolbarLayout tbl = (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout);
-                    tbl.setContentScrimColor(bgc);
-                } else {
-                    Toast.makeText(MainActivity.this, item.getTitle() + " pressed", Toast.LENGTH_LONG).show();
-                }
+                renderFragment(item);
                 item.setChecked(true);
-
                 drawerLayout.closeDrawers();
                 return true;
             }
@@ -82,9 +59,9 @@ public class MainActivity extends AppCompatActivity {
                 // avatar
                 ImageView avatar = (ImageView) findViewById(R.id.avatar);
                 Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.baobao);
-                bitmap = _.toSquare(bitmap);
-                bitmap = _.scaleBitmap(bitmap, 160);
-                bitmap = _.roundCorner(bitmap, 9999.f);
+                bitmap = U.toSquare(bitmap);
+                bitmap = U.scaleBitmap(bitmap, 160);
+                bitmap = U.roundCorner(bitmap, 9999.f);
                 avatar.setImageBitmap(bitmap);
             }
 
@@ -122,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-        // use HomeFragment by default
+        // render default fragment
         HomeFragment fragment = new HomeFragment();
         getSupportFragmentManager().beginTransaction().replace(R.id.content_layout, fragment).commit();
 
@@ -155,4 +132,24 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
     */
+
+    private void renderFragment(MenuItem item) {
+        Fragment frag = null;
+        int bgc = 0x0;
+        if (item.getItemId() == R.id.navi_home) {
+            frag = new HomeFragment();
+            bgc = 0x0;
+        } else if (item.getItemId() == R.id.navi_ship) {
+            frag = new ShipFragment();
+            bgc = 0xffff4444;
+        }
+
+        if (frag != null) {
+            getSupportFragmentManager().beginTransaction().replace(R.id.content_layout, frag).commit();
+            CollapsingToolbarLayout tbl = (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout);
+            tbl.setContentScrimColor(bgc);
+        } else {
+            Toast.makeText(MainActivity.this, item.getTitle() + " pressed", Toast.LENGTH_LONG).show();
+        }
+    }
 }
