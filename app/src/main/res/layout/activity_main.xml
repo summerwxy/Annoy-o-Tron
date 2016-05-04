@@ -11,11 +11,16 @@
         android:layout_height="match_parent">
         <!-- content section -->
         <android.support.v4.widget.NestedScrollView
-            android:id="@+id/content_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior">
-            <!-- fragment here, add by java code -->
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            android:fillViewport="true">
+            <FrameLayout
+                android:id="@+id/content_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <!-- fragment here, add by java code -->
+            </FrameLayout>
         </android.support.v4.widget.NestedScrollView>
 
         <!-- appbar section -->

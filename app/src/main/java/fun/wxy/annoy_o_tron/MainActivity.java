@@ -1,5 +1,6 @@
 package fun.wxy.annoy_o_tron;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -7,14 +8,19 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.AttributeSet;
 import android.view.View;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.Toast;
+
+import java.util.List;
 
 import fun.wxy.annoy_o_tron.utils.U;
 
@@ -100,11 +106,9 @@ public class MainActivity extends AppCompatActivity {
 
 
         // render default fragment
-        HomeFragment fragment = new HomeFragment();
-        getSupportFragmentManager().beginTransaction().replace(R.id.content_layout, fragment).commit();
-
-
-
+        String tag = "frag_" + R.id.navi_home;
+        Fragment frag = new HomeFragment();
+        getSupportFragmentManager().beginTransaction().add(R.id.content_layout, frag, tag).commit();
 
     }
 
@@ -133,23 +137,44 @@ public class MainActivity extends AppCompatActivity {
     }
     */
 
+
     private void renderFragment(MenuItem item) {
+        FragmentManager manager = getSupportFragmentManager();
+        FragmentTransaction transaction = manager.beginTransaction();
+        String tag = "frag_" + item.getItemId();
+        Fragment existFrag = manager.findFragmentByTag(tag);
         Fragment frag = null;
-        int bgc = 0x0;
-        if (item.getItemId() == R.id.navi_home) {
+
+        // TODO: 新增的 fragment 放在這邊
+        if (existFrag == null && item.getItemId() == R.id.navi_home) {
             frag = new HomeFragment();
-            bgc = 0x0;
-        } else if (item.getItemId() == R.id.navi_ship) {
+        } else if (existFrag == null && item.getItemId() == R.id.navi_ship) {
             frag = new ShipFragment();
-            bgc = 0xffff4444;
         }
 
-        if (frag != null) {
-            getSupportFragmentManager().beginTransaction().replace(R.id.content_layout, frag).commit();
-            CollapsingToolbarLayout tbl = (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout);
-            tbl.setContentScrimColor(bgc);
-        } else {
+        // hide all
+        List<Fragment> list = manager.getFragments();
+        if (list != null) {
+            for (Fragment it: manager.getFragments()) {
+                if (!it.isHidden()) {
+                    transaction.hide(it);
+                }
+            }
+        }
+        // show target
+        if (existFrag == null && frag != null) { // 新建 frag 的處理
+            transaction.add(R.id.content_layout, frag, tag).commit();
+        } else if (existFrag != null && frag == null) { // find 舊 frag 的處理
+            transaction.show(existFrag).commit();
+        } else { // 沒有新建的時候 顯示 Toast
             Toast.makeText(MainActivity.this, item.getTitle() + " pressed", Toast.LENGTH_LONG).show();
         }
+
+
+//        int bgc = 0xffff4444;
+//        CollapsingToolbarLayout tbl = (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout);
+//        tbl.setContentScrimColor(bgc);
+
     }
+
 }

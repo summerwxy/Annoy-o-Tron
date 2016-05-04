@@ -3,10 +3,14 @@ package fun.wxy.annoy_o_tron;
 
 import android.app.DatePickerDialog;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputEditText;
 
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -18,25 +22,26 @@ import android.widget.DatePicker;
 import org.adrianwalker.multilinestring.Multiline;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
-import de.greenrobot.dao.async.AsyncSession;
+import de.greenrobot.dao.query.QueryBuilder;
 import fun.wxy.annoy_o_tron.dao.DBHelper;
 import fun.wxy.annoy_o_tron.dao.DaoSession;
 import fun.wxy.annoy_o_tron.dao.Ship;
-import fun.wxy.annoy_o_tron.dao.ShipDao;
 import fun.wxy.annoy_o_tron.dao.ShipHeader;
+import fun.wxy.annoy_o_tron.dao.ShipHeaderDao;
+import fun.wxy.annoy_o_tron.list.ShipList;
 import fun.wxy.annoy_o_tron.utils.U;
 
 
 public class ShipFragment extends Fragment {
 
+    public final static int MESSAGE_WHAT_REDRAW_RECYCLER_VIEW = 56131516;
     public ShipFragment() {}
 
     @Override
@@ -87,17 +92,32 @@ public class ShipFragment extends Fragment {
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String date = editText.getText().toString();
+                final String date = editText.getText().toString();
                 // TODO: if ship date exist, can't load again
-                loadShipDataFromMSSql2Sqlite(date);
+                new Thread() {
+                    @Override
+                    public void run() {
+                        loadShipDataFromMSSql2Sqlite(date);
+                        Message msg = mHandler.obtainMessage();
+                        msg.what = MESSAGE_WHAT_REDRAW_RECYCLER_VIEW;
+                        msg.sendToTarget();
+                    }
+                }.start();
+
             }
         });
-
-        // TODO: show ship date list
-
+        redrawRecyclerView();
     }
 
-
+    public Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            if(msg.what == MESSAGE_WHAT_REDRAW_RECYCLER_VIEW) {
+                redrawRecyclerView();
+            }
+            super.handleMessage(msg);
+        }
+    };
 
     /**
      use AIS20121019100529
@@ -170,6 +190,7 @@ public class ShipFragment extends Fragment {
             rs = stmt.executeQuery();
             while (rs.next()) {
                 Ship it = new Ship();
+                it.setShip_date(date);
                 it.setStore_name(rs.getString("门店"));
                 it.setCategory(rs.getString("中分类"));
                 it.setItem_no(rs.getString("品号"));
@@ -183,6 +204,9 @@ public class ShipFragment extends Fragment {
                 daoSession.getShipDao().insert(it);
             }
             daoSession.getDatabase().setTransactionSuccessful();
+            // TODO: remove this line. show snakebar!!!
+            System.out.println("download okay!!");
+
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }catch (SQLException e) {
@@ -203,6 +227,16 @@ public class ShipFragment extends Fragment {
             }
             daoSession.getDatabase().endTransaction();
         }
+    }
+
+    private void redrawRecyclerView() {
+        DaoSession daoSession = DBHelper.getInstance(getContext()).getDaoSession();
+        QueryBuilder<ShipHeader> builder = daoSession.getShipHeaderDao().queryBuilder();
+        List<ShipHeader> list = builder.orderDesc(ShipHeaderDao.Properties.Ship_date).list();
+        RecyclerView recyclerView = (RecyclerView) getActivity().findViewById(R.id.recyclerView);
+        ShipList.ShipHeadersAdapter adapter = new ShipList().new ShipHeadersAdapter(list);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
     }
 
 

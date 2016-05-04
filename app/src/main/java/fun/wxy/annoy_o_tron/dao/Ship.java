@@ -8,6 +8,8 @@ public class Ship {
 
     private Long id;
     /** Not-null value. */
+    private String ship_date;
+    /** Not-null value. */
     private String store_name;
     /** Not-null value. */
     private String category;
@@ -31,8 +33,9 @@ public class Ship {
         this.id = id;
     }
 
-    public Ship(Long id, String store_name, String category, String item_no, String item_name, int order_qty, int ship_qty, String order_type, double price, String ship_no, String status) {
+    public Ship(Long id, String ship_date, String store_name, String category, String item_no, String item_name, int order_qty, int ship_qty, String order_type, double price, String ship_no, String status) {
         this.id = id;
+        this.ship_date = ship_date;
         this.store_name = store_name;
         this.category = category;
         this.item_no = item_no;
@@ -51,6 +54,16 @@ public class Ship {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    /** Not-null value. */
+    public String getShip_date() {
+        return ship_date;
+    }
+
+    /** Not-null value; ensure this value is available before it is saved to the database. */
+    public void setShip_date(String ship_date) {
+        this.ship_date = ship_date;
     }
 
     /** Not-null value. */

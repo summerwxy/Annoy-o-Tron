@@ -25,6 +25,7 @@ public class Generator {
     private static void createShipTable(Schema schema) {
         Entity t = schema.addEntity("Ship");
         t.addIdProperty();
+        t.addStringProperty("ship_date").notNull();
         t.addStringProperty("store_name").notNull();
         t.addStringProperty("category").notNull();
         t.addStringProperty("item_no").notNull();
@@ -60,7 +61,7 @@ public class Generator {
     }
 
     public static void main(String[] args) {
-        Schema schema = new Schema(2, "fun.wxy.annoy_o_tron.dao");
+        Schema schema = new Schema(3, "fun.wxy.annoy_o_tron.dao");
         createTable(schema);
         generateDaoFiles(schema);
     }

@@ -24,16 +24,17 @@ public class ShipDao extends AbstractDao<Ship, Long> {
     */
     public static class Properties {
         public final static Property Id = new Property(0, Long.class, "id", true, "_id");
-        public final static Property Store_name = new Property(1, String.class, "store_name", false, "STORE_NAME");
-        public final static Property Category = new Property(2, String.class, "category", false, "CATEGORY");
-        public final static Property Item_no = new Property(3, String.class, "item_no", false, "ITEM_NO");
-        public final static Property Item_name = new Property(4, String.class, "item_name", false, "ITEM_NAME");
-        public final static Property Order_qty = new Property(5, int.class, "order_qty", false, "ORDER_QTY");
-        public final static Property Ship_qty = new Property(6, int.class, "ship_qty", false, "SHIP_QTY");
-        public final static Property Order_type = new Property(7, String.class, "order_type", false, "ORDER_TYPE");
-        public final static Property Price = new Property(8, double.class, "price", false, "PRICE");
-        public final static Property Ship_no = new Property(9, String.class, "ship_no", false, "SHIP_NO");
-        public final static Property Status = new Property(10, String.class, "status", false, "STATUS");
+        public final static Property Ship_date = new Property(1, String.class, "ship_date", false, "SHIP_DATE");
+        public final static Property Store_name = new Property(2, String.class, "store_name", false, "STORE_NAME");
+        public final static Property Category = new Property(3, String.class, "category", false, "CATEGORY");
+        public final static Property Item_no = new Property(4, String.class, "item_no", false, "ITEM_NO");
+        public final static Property Item_name = new Property(5, String.class, "item_name", false, "ITEM_NAME");
+        public final static Property Order_qty = new Property(6, int.class, "order_qty", false, "ORDER_QTY");
+        public final static Property Ship_qty = new Property(7, int.class, "ship_qty", false, "SHIP_QTY");
+        public final static Property Order_type = new Property(8, String.class, "order_type", false, "ORDER_TYPE");
+        public final static Property Price = new Property(9, double.class, "price", false, "PRICE");
+        public final static Property Ship_no = new Property(10, String.class, "ship_no", false, "SHIP_NO");
+        public final static Property Status = new Property(11, String.class, "status", false, "STATUS");
     };
 
 
@@ -50,16 +51,17 @@ public class ShipDao extends AbstractDao<Ship, Long> {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "\"SHIP\" (" + //
                 "\"_id\" INTEGER PRIMARY KEY ," + // 0: id
-                "\"STORE_NAME\" TEXT NOT NULL ," + // 1: store_name
-                "\"CATEGORY\" TEXT NOT NULL ," + // 2: category
-                "\"ITEM_NO\" TEXT NOT NULL ," + // 3: item_no
-                "\"ITEM_NAME\" TEXT NOT NULL ," + // 4: item_name
-                "\"ORDER_QTY\" INTEGER NOT NULL ," + // 5: order_qty
-                "\"SHIP_QTY\" INTEGER NOT NULL ," + // 6: ship_qty
-                "\"ORDER_TYPE\" TEXT NOT NULL ," + // 7: order_type
-                "\"PRICE\" REAL NOT NULL ," + // 8: price
-                "\"SHIP_NO\" TEXT," + // 9: ship_no
-                "\"STATUS\" TEXT NOT NULL );"); // 10: status
+                "\"SHIP_DATE\" TEXT NOT NULL ," + // 1: ship_date
+                "\"STORE_NAME\" TEXT NOT NULL ," + // 2: store_name
+                "\"CATEGORY\" TEXT NOT NULL ," + // 3: category
+                "\"ITEM_NO\" TEXT NOT NULL ," + // 4: item_no
+                "\"ITEM_NAME\" TEXT NOT NULL ," + // 5: item_name
+                "\"ORDER_QTY\" INTEGER NOT NULL ," + // 6: order_qty
+                "\"SHIP_QTY\" INTEGER NOT NULL ," + // 7: ship_qty
+                "\"ORDER_TYPE\" TEXT NOT NULL ," + // 8: order_type
+                "\"PRICE\" REAL NOT NULL ," + // 9: price
+                "\"SHIP_NO\" TEXT," + // 10: ship_no
+                "\"STATUS\" TEXT NOT NULL );"); // 11: status
     }
 
     /** Drops the underlying database table. */
@@ -77,20 +79,21 @@ public class ShipDao extends AbstractDao<Ship, Long> {
         if (id != null) {
             stmt.bindLong(1, id);
         }
-        stmt.bindString(2, entity.getStore_name());
-        stmt.bindString(3, entity.getCategory());
-        stmt.bindString(4, entity.getItem_no());
-        stmt.bindString(5, entity.getItem_name());
-        stmt.bindLong(6, entity.getOrder_qty());
-        stmt.bindLong(7, entity.getShip_qty());
-        stmt.bindString(8, entity.getOrder_type());
-        stmt.bindDouble(9, entity.getPrice());
+        stmt.bindString(2, entity.getShip_date());
+        stmt.bindString(3, entity.getStore_name());
+        stmt.bindString(4, entity.getCategory());
+        stmt.bindString(5, entity.getItem_no());
+        stmt.bindString(6, entity.getItem_name());
+        stmt.bindLong(7, entity.getOrder_qty());
+        stmt.bindLong(8, entity.getShip_qty());
+        stmt.bindString(9, entity.getOrder_type());
+        stmt.bindDouble(10, entity.getPrice());
  
         String ship_no = entity.getShip_no();
         if (ship_no != null) {
-            stmt.bindString(10, ship_no);
+            stmt.bindString(11, ship_no);
         }
-        stmt.bindString(11, entity.getStatus());
+        stmt.bindString(12, entity.getStatus());
     }
 
     /** @inheritdoc */
@@ -104,16 +107,17 @@ public class ShipDao extends AbstractDao<Ship, Long> {
     public Ship readEntity(Cursor cursor, int offset) {
         Ship entity = new Ship( //
             cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
-            cursor.getString(offset + 1), // store_name
-            cursor.getString(offset + 2), // category
-            cursor.getString(offset + 3), // item_no
-            cursor.getString(offset + 4), // item_name
-            cursor.getInt(offset + 5), // order_qty
-            cursor.getInt(offset + 6), // ship_qty
-            cursor.getString(offset + 7), // order_type
-            cursor.getDouble(offset + 8), // price
-            cursor.isNull(offset + 9) ? null : cursor.getString(offset + 9), // ship_no
-            cursor.getString(offset + 10) // status
+            cursor.getString(offset + 1), // ship_date
+            cursor.getString(offset + 2), // store_name
+            cursor.getString(offset + 3), // category
+            cursor.getString(offset + 4), // item_no
+            cursor.getString(offset + 5), // item_name
+            cursor.getInt(offset + 6), // order_qty
+            cursor.getInt(offset + 7), // ship_qty
+            cursor.getString(offset + 8), // order_type
+            cursor.getDouble(offset + 9), // price
+            cursor.isNull(offset + 10) ? null : cursor.getString(offset + 10), // ship_no
+            cursor.getString(offset + 11) // status
         );
         return entity;
     }
@@ -122,16 +126,17 @@ public class ShipDao extends AbstractDao<Ship, Long> {
     @Override
     public void readEntity(Cursor cursor, Ship entity, int offset) {
         entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
-        entity.setStore_name(cursor.getString(offset + 1));
-        entity.setCategory(cursor.getString(offset + 2));
-        entity.setItem_no(cursor.getString(offset + 3));
-        entity.setItem_name(cursor.getString(offset + 4));
-        entity.setOrder_qty(cursor.getInt(offset + 5));
-        entity.setShip_qty(cursor.getInt(offset + 6));
-        entity.setOrder_type(cursor.getString(offset + 7));
-        entity.setPrice(cursor.getDouble(offset + 8));
-        entity.setShip_no(cursor.isNull(offset + 9) ? null : cursor.getString(offset + 9));
-        entity.setStatus(cursor.getString(offset + 10));
+        entity.setShip_date(cursor.getString(offset + 1));
+        entity.setStore_name(cursor.getString(offset + 2));
+        entity.setCategory(cursor.getString(offset + 3));
+        entity.setItem_no(cursor.getString(offset + 4));
+        entity.setItem_name(cursor.getString(offset + 5));
+        entity.setOrder_qty(cursor.getInt(offset + 6));
+        entity.setShip_qty(cursor.getInt(offset + 7));
+        entity.setOrder_type(cursor.getString(offset + 8));
+        entity.setPrice(cursor.getDouble(offset + 9));
+        entity.setShip_no(cursor.isNull(offset + 10) ? null : cursor.getString(offset + 10));
+        entity.setStatus(cursor.getString(offset + 11));
      }
     
     /** @inheritdoc */
