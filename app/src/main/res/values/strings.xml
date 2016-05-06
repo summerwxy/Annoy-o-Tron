@@ -8,4 +8,7 @@
     <string name="title_activity_display_message">My Message</string>
 
     <string name="fragment_home_greetings">Welcome to use my app</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

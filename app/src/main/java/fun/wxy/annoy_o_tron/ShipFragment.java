@@ -2,13 +2,16 @@ package fun.wxy.annoy_o_tron;
 
 
 import android.app.DatePickerDialog;
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputEditText;
 
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.InputType;
@@ -18,6 +21,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import org.adrianwalker.multilinestring.Multiline;
 
@@ -33,6 +38,7 @@ import de.greenrobot.dao.query.QueryBuilder;
 import fun.wxy.annoy_o_tron.dao.DBHelper;
 import fun.wxy.annoy_o_tron.dao.DaoSession;
 import fun.wxy.annoy_o_tron.dao.Ship;
+import fun.wxy.annoy_o_tron.dao.ShipDao;
 import fun.wxy.annoy_o_tron.dao.ShipHeader;
 import fun.wxy.annoy_o_tron.dao.ShipHeaderDao;
 import fun.wxy.annoy_o_tron.list.ShipList;
@@ -93,17 +99,23 @@ public class ShipFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 final String date = editText.getText().toString();
-                // TODO: if ship date exist, can't load again
-                new Thread() {
-                    @Override
-                    public void run() {
-                        loadShipDataFromMSSql2Sqlite(date);
-                        Message msg = mHandler.obtainMessage();
-                        msg.what = MESSAGE_WHAT_REDRAW_RECYCLER_VIEW;
-                        msg.sendToTarget();
-                    }
-                }.start();
 
+                DaoSession daoSession = DBHelper.getInstance(getContext()).getDaoSession();
+                QueryBuilder<ShipHeader> builder = daoSession.getShipHeaderDao().queryBuilder();
+                builder.where(ShipHeaderDao.Properties.Ship_date.eq(date));
+                if (builder.count() > 0) {
+                    Snackbar.make(getView(), "日期：" + date + " 已下载，删除后可重新下载。", Snackbar.LENGTH_LONG).show();
+                } else {
+                    new Thread() {
+                        @Override
+                        public void run() {
+                            loadShipDataFromMSSql2Sqlite(date);
+                            Message msg = mHandler.obtainMessage();
+                            msg.what = MESSAGE_WHAT_REDRAW_RECYCLER_VIEW;
+                            msg.sendToTarget();
+                        }
+                    }.start();
+                }
             }
         });
         redrawRecyclerView();
@@ -204,9 +216,8 @@ public class ShipFragment extends Fragment {
                 daoSession.getShipDao().insert(it);
             }
             daoSession.getDatabase().setTransactionSuccessful();
-            // TODO: remove this line. show snakebar!!!
-            System.out.println("download okay!!");
 
+            Snackbar.make(getView(), "日期：" + date + " 下载完毕！", Snackbar.LENGTH_LONG).show();
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }catch (SQLException e) {
@@ -234,9 +245,102 @@ public class ShipFragment extends Fragment {
         QueryBuilder<ShipHeader> builder = daoSession.getShipHeaderDao().queryBuilder();
         List<ShipHeader> list = builder.orderDesc(ShipHeaderDao.Properties.Ship_date).list();
         RecyclerView recyclerView = (RecyclerView) getActivity().findViewById(R.id.recyclerView);
-        ShipList.ShipHeadersAdapter adapter = new ShipList().new ShipHeadersAdapter(list);
+        ShipHeadersAdapter adapter = new ShipHeadersAdapter(list);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+    }
+
+
+
+
+    // ===========================================================================
+    // view holder
+    public class ViewHolder extends RecyclerView.ViewHolder{
+        public TextView shipDate;
+        public TextView createDate;
+        public Button deleteBtn;
+        public Button detailBtn;
+        public ViewHolder(View itemView) {
+            super(itemView);
+            shipDate = (TextView) itemView.findViewById(R.id.ship_date);
+            createDate = (TextView) itemView.findViewById(R.id.created_date);
+            deleteBtn = (Button) itemView.findViewById(R.id.delete_btn);
+            detailBtn = (Button) itemView.findViewById(R.id.detail_btn);
+        }
+    }
+
+
+    // adapter
+    public class ShipHeadersAdapter extends RecyclerView.Adapter<ViewHolder> {
+        private List<ShipHeader> shipHeader;
+
+        public ShipHeadersAdapter(List<ShipHeader> sh){
+            shipHeader = sh;
+        }
+
+        @Override
+        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            Context context = parent.getContext();
+            View view = LayoutInflater.from(context).inflate(R.layout.item_ship_date_item, parent, false);
+            ViewHolder viewHolder = new ViewHolder(view);
+            return viewHolder;
+        }
+
+        @Override
+        public void onBindViewHolder(ViewHolder holder, int position) {
+            final ShipHeader sh = shipHeader.get(position);
+            TextView shipDate = holder.shipDate;
+            shipDate.setText(sh.getShip_date());
+            TextView createdDate = holder.createDate;
+            createdDate.setText(sh.getCreated_date().toString());
+            Button deleteBtn = holder.deleteBtn;
+            deleteBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // greendao
+                    DaoSession daoSession = DBHelper.getInstance(v.getContext()).getDaoSession();
+                    daoSession.getDatabase().beginTransaction();
+                    try {
+                        QueryBuilder<ShipHeader> builder = daoSession.getShipHeaderDao().queryBuilder();
+                        builder.where(ShipHeaderDao.Properties.Ship_date.eq(sh.getShip_date()));
+                        builder.buildDelete().executeDeleteWithoutDetachingEntities();
+
+                        QueryBuilder<Ship> builder2 = daoSession.getShipDao().queryBuilder();
+                        builder2.where(ShipDao.Properties.Ship_date.eq(sh.getShip_date()));
+                        builder2.buildDelete().executeDeleteWithoutDetachingEntities();
+
+                        daoSession.getDatabase().setTransactionSuccessful();
+                    } finally {
+                        daoSession.getDatabase().endTransaction();
+                    }
+
+                    Message msg = mHandler.obtainMessage();
+                    msg.what = ShipFragment.MESSAGE_WHAT_REDRAW_RECYCLER_VIEW;
+                    msg.sendToTarget();
+
+                    Snackbar.make(getView(), "日期：" + sh.getShip_date() + " 删除完毕！", Snackbar.LENGTH_LONG).show();
+                }
+            });
+            Button detailBtn = holder.detailBtn;
+            detailBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    FragmentManager manager = getActivity().getSupportFragmentManager();
+                    Fragment frag = new ShipDetailFragment();
+                    Bundle bundle = new Bundle();
+                    bundle.putString("date", sh.getShip_date());
+                    frag.setArguments(bundle);
+                    MainActivity.replaceFragment(frag, manager, v.getRootView());
+                }
+            });
+
+        }
+
+        @Override
+        public int getItemCount() {
+            return shipHeader.size();
+        }
+
     }
 
 

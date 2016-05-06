@@ -16,10 +16,21 @@
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
             android:fillViewport="true">
             <FrameLayout
-                android:id="@+id/content_layout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
-                <!-- fragment here, add by java code -->
+                <FrameLayout
+                    android:id="@+id/content_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                    <!-- fragment here, add by java code -->
+                </FrameLayout>
+                <FrameLayout
+                    android:id="@+id/content_replace_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="invisible">
+                    <!-- fragment here, add by java code -->
+                </FrameLayout>
             </FrameLayout>
         </android.support.v4.widget.NestedScrollView>
 
@@ -41,7 +52,7 @@
                 <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="160dp"
-                    android:src="@drawable/baobao"
+                    android:src="@drawable/google_material_design_wallpaper"
                     android:scaleType="centerCrop"
                     android:fitsSystemWindows="true"
                     app:layout_collapseMode="parallax"/>

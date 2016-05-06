@@ -101,4 +101,6 @@ dependencies {
 dependencies {
     compile 'de.greenrobot:greendao:2.1.0'
 }
-// ======================================================
+dependencies {
+    compile 'com.android.support:support-v4:23.+'
+}// ======================================================

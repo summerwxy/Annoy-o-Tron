@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -61,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
-                // TODO: 應該放到 drawer 的 onDraw 之類的地方去 不過不知道怎麼寫
+                // TODO: TOFIX 應該放到 drawer 的 onDraw 之類的地方去 不過不知道怎麼寫
                 // avatar
                 ImageView avatar = (ImageView) findViewById(R.id.avatar);
                 Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.baobao);
@@ -108,7 +109,8 @@ public class MainActivity extends AppCompatActivity {
         // render default fragment
         String tag = "frag_" + R.id.navi_home;
         Fragment frag = new HomeFragment();
-        getSupportFragmentManager().beginTransaction().add(R.id.content_layout, frag, tag).commit();
+        renderFragment(frag, tag);
+//        getSupportFragmentManager().beginTransaction().add(R.id.content_layout, frag, tag).commit();
 
     }
 
@@ -139,42 +141,73 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void renderFragment(MenuItem item) {
-        FragmentManager manager = getSupportFragmentManager();
-        FragmentTransaction transaction = manager.beginTransaction();
         String tag = "frag_" + item.getItemId();
-        Fragment existFrag = manager.findFragmentByTag(tag);
+        Fragment existFrag = getSupportFragmentManager().findFragmentByTag(tag);
         Fragment frag = null;
 
-        // TODO: 新增的 fragment 放在這邊
+        // TODO: NOTE ===== new menu item, code here =====
         if (existFrag == null && item.getItemId() == R.id.navi_home) {
             frag = new HomeFragment();
         } else if (existFrag == null && item.getItemId() == R.id.navi_ship) {
             frag = new ShipFragment();
         }
+        renderFragment(frag, tag);
+//        int bgc = 0xffff4444;
+//        CollapsingToolbarLayout tbl = (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout);
+//        tbl.setContentScrimColor(bgc);
+    }
+
+
+    public void renderFragment(Fragment frag, String tag) {
+        FragmentManager manager = getSupportFragmentManager();
+        View view = findViewById(R.id.drawer_layout);
+        renderFragment(frag, tag, manager, view);
+    }
+
+    public static void renderFragment(Fragment frag, String tag, FragmentManager manager, View view) {
+        View contentLayout = view.findViewById(R.id.content_layout);
+        if (contentLayout != null) {
+            contentLayout.setVisibility(View.VISIBLE);
+        }
+        View contentReplaceLayout = view.findViewById(R.id.content_replace_layout);
+        if (contentReplaceLayout != null) {
+            contentReplaceLayout.setVisibility(View.INVISIBLE);
+        }
+        FragmentTransaction transaction = manager.beginTransaction();
+        Fragment existFrag = manager.findFragmentByTag(tag);
 
         // hide all
         List<Fragment> list = manager.getFragments();
         if (list != null) {
             for (Fragment it: manager.getFragments()) {
-                if (!it.isHidden()) {
+                if (it != null && !it.isHidden()) {
                     transaction.hide(it);
                 }
             }
         }
+
         // show target
-        if (existFrag == null && frag != null) { // 新建 frag 的處理
+        if (existFrag == null && frag != null) { // got new frag
             transaction.add(R.id.content_layout, frag, tag).commit();
-        } else if (existFrag != null && frag == null) { // find 舊 frag 的處理
+        //} else if (existFrag != null && frag != null) { // replace it
+        //    transaction.replace(R.id.content_layout, frag, tag).commit();
+        } else if (existFrag != null) { // got old frag
             transaction.show(existFrag).commit();
-        } else { // 沒有新建的時候 顯示 Toast
-            Toast.makeText(MainActivity.this, item.getTitle() + " pressed", Toast.LENGTH_LONG).show();
+        } else { // 沒有新建的時候 顯示
+            Snackbar.make(view, "TBD: tag: " + tag, Snackbar.LENGTH_LONG).show();
         }
+    }
 
-
-//        int bgc = 0xffff4444;
-//        CollapsingToolbarLayout tbl = (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout);
-//        tbl.setContentScrimColor(bgc);
-
+    public static void replaceFragment(Fragment frag, FragmentManager manager, View view) {
+        View contentLayout = view.findViewById(R.id.content_layout);
+        if (contentLayout != null) {
+            contentLayout.setVisibility(View.INVISIBLE);
+        }
+        View contentReplaceLayout = view.findViewById(R.id.content_replace_layout);
+        if (contentReplaceLayout != null) {
+            contentReplaceLayout.setVisibility(View.VISIBLE);
+        }
+        manager.beginTransaction().replace(R.id.content_replace_layout, frag).commit();
     }
 
 }
