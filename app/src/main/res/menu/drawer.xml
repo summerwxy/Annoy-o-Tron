@@ -13,9 +13,9 @@
             android:title="Shipping"/>
 
         <item
-            android:id="@+id/navi_item_2"
+            android:id="@+id/navi_dev"
             android:icon="@drawable/ic_extension_black_24dp"
-            android:title="A little longer title"/>
+            android:title="0_o's DEV PAGE"/>
         <item
             android:id="@+id/navi_item_3"
             android:icon="@drawable/ic_settings_black_24dp"

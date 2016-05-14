@@ -1,0 +1,23 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="fun.wxy.annoy_o_tron.ShipDetailPage2Fragment"
+    android:orientation="vertical">
+    <TextView
+        android:id="@+id/tv_item_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:gravity="center_horizontal"
+        android:textSize="@dimen/mdtp_year_label_text_size"
+        android:padding="10dp"
+        android:background="#ff666699"
+        android:textColor="#ffffffff"/>
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv_page2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    </android.support.v7.widget.RecyclerView>
+
+</LinearLayout>

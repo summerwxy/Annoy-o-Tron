@@ -22,3 +22,21 @@ task clean(type: Delete) {
     delete rootProject.buildDir
 }
 
+
+// ===== START Lean Cloud =====
+buildscript {
+    repositories {
+        maven {
+            url "http://mvn.leancloud.cn/nexus/content/repositories/releases"
+        }
+    }
+}
+
+allprojects {
+    repositories {
+        maven {
+            url "http://mvn.leancloud.cn/nexus/content/repositories/releases"
+        }
+    }
+}
+// ===== END Lean Cloud =====

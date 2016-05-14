@@ -41,7 +41,6 @@ import fun.wxy.annoy_o_tron.dao.Ship;
 import fun.wxy.annoy_o_tron.dao.ShipDao;
 import fun.wxy.annoy_o_tron.dao.ShipHeader;
 import fun.wxy.annoy_o_tron.dao.ShipHeaderDao;
-import fun.wxy.annoy_o_tron.list.ShipList;
 import fun.wxy.annoy_o_tron.utils.U;
 
 
@@ -134,6 +133,7 @@ public class ShipFragment extends Fragment {
     /**
      use AIS20121019100529
      select FCustName as 门店, FPrtclsName as 中分类, FItemNumber as 品号, FItemName as 品名, sum(FOrderQty) as 订单数量, sum(FQty) as 发货数量, FOrdClsName as 订单类型, FAuxTaxPrice as 单价, FBillNo as 出库单号, FStatus
+     into #aa
      from (select FCustName, FPrtClsName, FOrderBillNO, FItemNumber, FItemName, FOrderQty, FQty, FInterID, FOrdClsName, FAuxTaxPrice, FBillNo, FStatus from
        (SELECT t1.FOrderBillNO, t3.FName FCustName, t2.FNumber FItemNumber, t2.FName FItemName, t1.FOrderQty, t1.FQty, t.FInterID, isnull(t4.FName,'') FOrdClsName, isnull(t5.FName,'') FPrtClsName, t6.FAuxTaxPrice,t8.FBillNo, isnull(t1.FStatus,0) as FStatus
        FROM t_AWE_SalesDelivery t
@@ -174,6 +174,9 @@ public class ShipFragment extends Fragment {
      ) k ) kk
      group by FCustName, FPrtclsName, FItemNumber, FItemName, FOrdClsName, FAuxTaxPrice, FBillNo, FStatus
      order by FBillNo
+
+     -- select * from #aa where 品号 in ('11.02.0017', '16.11.0001', '16.11.0002') order by 品号, 门店
+     select * from #aa order by 品号, 门店
      */
     @Multiline static String sql;
 

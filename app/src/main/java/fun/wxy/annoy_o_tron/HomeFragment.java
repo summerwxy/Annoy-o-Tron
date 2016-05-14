@@ -1,10 +1,12 @@
 package fun.wxy.annoy_o_tron;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 
 public class HomeFragment extends Fragment {
@@ -18,4 +20,20 @@ public class HomeFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_home, container, false);
     }
 
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        Button btn = (Button) view.findViewById(R.id.test_btn);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Fragment frag = null;
+                String tag = "frag_" + R.id.navi_ship;
+                if (getActivity().getSupportFragmentManager().findFragmentByTag(tag) == null) {
+                    frag = new ShipFragment();
+                }
+                MainActivity.renderFragment(frag, tag, getFragmentManager(), v.getRootView());
+            }
+        });
+    }
 }

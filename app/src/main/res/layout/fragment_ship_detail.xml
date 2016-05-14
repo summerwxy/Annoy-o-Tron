@@ -8,42 +8,32 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <Button
-            android:id="@+id/top_prev"
+            android:id="@+id/top_back"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="上一个"
-            android:layout_weight="2"/>
-        <Button
+            android:text="选择日期"
+            android:layout_weight="1"/>
+        <TextView
             android:id="@+id/top_date"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="[#date]"
-            android:layout_weight="3"/>
+            android:text="[#top_date]"
+            android:layout_weight="1"
+            android:textStyle="bold"
+            android:gravity="center"/>
         <Button
             android:id="@+id/top_item"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="全部物料"
-            android:layout_weight="3"/>
-        <Button
-            android:id="@+id/top_next"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="下一个"
-            android:layout_weight="2"/>
-
+            android:layout_weight="1"/>
     </LinearLayout>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/item_list"
+    <android.support.v4.view.ViewPager
+        android:id="@+id/ship_detail_pager"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-    </android.support.v7.widget.RecyclerView>
-    <Button
-        android:id="@+id/bottom_next"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="下一个物料"/>
+    </android.support.v4.view.ViewPager>
 
 </LinearLayout>
