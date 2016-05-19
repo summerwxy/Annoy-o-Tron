@@ -156,6 +156,8 @@ public class MainActivity extends AppCompatActivity {
             frag = new HomeFragment();
         } else if (existFrag == null && item.getItemId() == R.id.navi_ship) {
             frag = new ShipFragment();
+        }  else if (existFrag == null && item.getItemId() == R.id.navi_dev) {
+            frag = new DevFragment();
         }
         renderFragment(frag, tag);
 //        int bgc = 0xffff4444;

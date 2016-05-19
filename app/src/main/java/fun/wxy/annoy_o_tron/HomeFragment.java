@@ -23,7 +23,7 @@ public class HomeFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        Button btn = (Button) view.findViewById(R.id.test_btn);
+        Button btn = (Button) view.findViewById(R.id.btn_test);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -35,5 +35,19 @@ public class HomeFragment extends Fragment {
                 MainActivity.renderFragment(frag, tag, getFragmentManager(), v.getRootView());
             }
         });
+
+        Button btn2 = (Button) view.findViewById(R.id.btn_dev);
+        btn2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Fragment frag = null;
+                String tag = "frag_" + R.id.navi_dev;
+                if (getActivity().getSupportFragmentManager().findFragmentByTag(tag) == null) {
+                    frag = new DevFragment();
+                }
+                MainActivity.renderFragment(frag, tag, getFragmentManager(), v.getRootView());
+            }
+        });
+
     }
 }
