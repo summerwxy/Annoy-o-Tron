@@ -3,14 +3,17 @@ package fun.wxy.annoy_o_tron;
 import android.Manifest;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.PorterDuff;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Build;
@@ -39,6 +42,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Random;
 import java.util.Set;
 
 import fun.wxy.annoy_o_tron.receiver.OverlayReceiver;
@@ -50,6 +54,7 @@ import fun.wxy.annoy_o_tron.utils.U;
 public class DevFragment extends Fragment {
     private static final String TAG = DevFragment.class.getSimpleName();
 
+    public final static String REDRAW_OVERLAY = "com.givemepass.sendmessage";
 
     public DevFragment() {
         // Required empty public constructor
@@ -162,31 +167,24 @@ public class DevFragment extends Fragment {
         });
 
 
-        // receiver
-        Intent overlayIntent = new Intent(getActivity(), OverlayReceiver.class);
-        final PendingIntent pendingIntent = PendingIntent.getBroadcast(getContext(), 0, overlayIntent, 0);
-        final AlarmManager manager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
-
-        Button startTimerService = (Button) getActivity().findViewById(R.id.btn_start_timer_service);
-        startTimerService.setOnClickListener(new View.OnClickListener() {
+        // register
+        BroadcastReceiver broadcastReceiver =  new BroadcastReceiver() {
             @Override
-            public void onClick(View v) {
-                Log.v(TAG, "onclick: Start TimerService");
-                manager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), 2 * 1000, pendingIntent);
+            public void onReceive(Context mContext, Intent mIntent) {
+                System.out.println("###### i got order la ###");
+                ImageView iv = OverlayService.instance.imageView;
+                Bitmap bitmap = Bitmap.createBitmap(iv.getWidth(), iv.getHeight(), Bitmap.Config.ARGB_8888);
+                Canvas canvas = new Canvas(bitmap);
+                Paint paint = new Paint();
+                paint.setColor(Color.GREEN);
+                paint.setTextSize(40);
+                Random rnd = new Random();
+                canvas.drawText("@", rnd.nextInt(iv.getWidth()), rnd.nextInt(iv.getHeight()), paint);
+                iv.setImageBitmap(bitmap);
+                System.out.println("---------------------------------");
             }
-        });
-
-        Button stopTimerService = (Button) getActivity().findViewById(R.id.btn_stop_timer_service);
-        stopTimerService.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.v(TAG, "onclick: Stop TimerService");
-                if (manager != null) {
-                    manager.cancel(pendingIntent);
-                }
-            }
-        });
-
+        };
+        getActivity().registerReceiver(broadcastReceiver, new IntentFilter(DevFragment.REDRAW_OVERLAY));
 
         Button testButton = (Button) getActivity().findViewById(R.id.btn_dev_test);
         testButton.setOnClickListener(new View.OnClickListener() {
@@ -234,10 +232,16 @@ public class DevFragment extends Fragment {
             public void onClick(View v) {
                 Log.v(TAG, "click test 2 button");
                 ImageView iv = OverlayService.instance.imageView;
-                System.out.println(iv);
-                System.out.println(1);
-                iv.setBackgroundColor(0x330000ff);
-                System.out.println(2);
+
+                Bitmap bitmap = Bitmap.createBitmap(iv.getWidth(), iv.getHeight(), Bitmap.Config.ARGB_8888);
+                Canvas canvas = new Canvas(bitmap);
+                Paint paint = new Paint();
+                paint.setColor(Color.RED);
+                paint.setTextSize(40);
+                Random rnd = new Random();
+                canvas.drawText("@", rnd.nextInt(iv.getWidth()), rnd.nextInt(iv.getHeight()), paint);
+                iv.setImageBitmap(bitmap);
+
             }
         });
 

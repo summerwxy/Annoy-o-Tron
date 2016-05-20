@@ -35,6 +35,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import fun.wxy.annoy_o_tron.DevFragment;
 import fun.wxy.annoy_o_tron.R;
 import fun.wxy.annoy_o_tron.utils.U;
 
@@ -47,7 +48,6 @@ public class OverlayService extends Service {
     public MyImageView imageView;
     private ScheduledExecutorService scheduleTaskExecutor = Executors.newScheduledThreadPool(5);
     private boolean isScheduleRunning = false;
-
 
     public OverlayService() {
     }
@@ -78,16 +78,18 @@ public class OverlayService extends Service {
         super.onStartCommand(intent, flags, startId);
 
         // run every x secs.
-//        if (!isScheduleRunning) {
-//            scheduleTaskExecutor.scheduleWithFixedDelay(new Runnable() {
-//                @Override
-//                public void run() {
-//                    System.out.println("do something every N secs");
-//
-//                }
-//            }, 2, 2, TimeUnit.SECONDS);
-//            isScheduleRunning = true;
-//        }
+        if (!isScheduleRunning) {
+            scheduleTaskExecutor.scheduleWithFixedDelay(new Runnable() {
+                @Override
+                public void run() {
+                    System.out.println("do something every N secs");
+                    Intent intent = new Intent();
+                    intent.setAction(DevFragment.REDRAW_OVERLAY);
+                    sendBroadcast(intent);
+                }
+            }, 2, 2, TimeUnit.SECONDS);
+            isScheduleRunning = true;
+        }
 
 
 
@@ -124,6 +126,7 @@ public class OverlayService extends Service {
     }
 
     public class MyImageView extends ImageView {
+        private Canvas canvas;
         public MyImageView(Context context) {
             super(context);
         }
@@ -140,6 +143,11 @@ public class OverlayService extends Service {
             paint.setColor(Color.RED);
             paint.setTextSize(40);
             canvas.drawText("## Overlay ##", 250, 50, paint);
+            this.canvas = canvas;
+        }
+
+        public Canvas getCanvas() {
+            return canvas;
         }
     }
 }
