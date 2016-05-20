@@ -1,6 +1,9 @@
 package fun.wxy.annoy_o_tron;
 
 import android.Manifest;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -9,8 +12,11 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.media.MediaScannerConnection;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -22,16 +28,22 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import fun.wxy.annoy_o_tron.receiver.OverlayReceiver;
 import fun.wxy.annoy_o_tron.service.OverlayService;
+import fun.wxy.annoy_o_tron.service.TimerService;
 import fun.wxy.annoy_o_tron.utils.U;
 
 
@@ -54,15 +66,22 @@ public class DevFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        // 檢查有沒有寫的權限
         int permissionCheck = ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE);
         if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
             Log.v(TAG, "i have not Manifest.permission.WRITE_EXTERNAL_STORAGE");
             ActivityCompat.requestPermissions(getActivity(),
                     new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                    111);
+                    0);
         }
-
-
+        // 檢查能不能在其他 app 之上
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (!Settings.canDrawOverlays(getContext())) {
+                Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getActivity().getPackageName()));
+                startActivityForResult(intent, 1234);
+                Toast.makeText(getContext(), "allow this app over others app.", Toast.LENGTH_LONG).show();
+            }
+        }
 
         Button screenshot = (Button) getActivity().findViewById(R.id.btn_screenshot);
         screenshot.setOnClickListener(new View.OnClickListener() {
@@ -94,6 +113,34 @@ public class DevFragment extends Fragment {
             }
         });
 
+        Button screenshot2 = (Button) getActivity().findViewById(R.id.btn_dev_screenshot2);
+        screenshot2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                U.snapshot("zookeeper.png");
+                /*
+                try {
+                    Calendar cal = Calendar.getInstance();
+                    System.out.println(cal.getTimeInMillis());
+
+                    Process sh = Runtime.getRuntime().exec("su", null, null);
+                    OutputStream os = sh.getOutputStream();
+                    os.write(("/system/bin/screencap -p /sdcard/Download/zookeeper.png").getBytes("ASCII"));
+                    os.flush();
+                    os.close();
+
+                    Calendar cal2 = Calendar.getInstance();
+                    System.out.println(cal2.getTimeInMillis());
+                    System.out.println(cal2.getTimeInMillis() - cal.getTimeInMillis());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                */
+
+
+            }
+        });
+
         Button startOverlayService = (Button) getActivity().findViewById(R.id.btn_start_overlay_service);
         startOverlayService.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -114,6 +161,33 @@ public class DevFragment extends Fragment {
             }
         });
 
+
+        // receiver
+        Intent overlayIntent = new Intent(getActivity(), OverlayReceiver.class);
+        final PendingIntent pendingIntent = PendingIntent.getBroadcast(getContext(), 0, overlayIntent, 0);
+        final AlarmManager manager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
+
+        Button startTimerService = (Button) getActivity().findViewById(R.id.btn_start_timer_service);
+        startTimerService.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.v(TAG, "onclick: Start TimerService");
+                manager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), 2 * 1000, pendingIntent);
+            }
+        });
+
+        Button stopTimerService = (Button) getActivity().findViewById(R.id.btn_stop_timer_service);
+        stopTimerService.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.v(TAG, "onclick: Stop TimerService");
+                if (manager != null) {
+                    manager.cancel(pendingIntent);
+                }
+            }
+        });
+
+
         Button testButton = (Button) getActivity().findViewById(R.id.btn_dev_test);
         testButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -124,7 +198,6 @@ public class DevFragment extends Fragment {
                 if(imgFile.exists()){
                     Log.v(TAG, "image file exist");
                     Bitmap bitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
-                    // TODO: find pixel location in image
                     Paint paint = new Paint();
                     paint.setAntiAlias(true);
                     paint.setColor(Color.RED);
@@ -153,6 +226,22 @@ public class DevFragment extends Fragment {
 
             }
         });
+
+
+        Button test2Button = (Button) getActivity().findViewById(R.id.btn_dev_test2);
+        test2Button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.v(TAG, "click test 2 button");
+                ImageView iv = OverlayService.instance.imageView;
+                System.out.println(iv);
+                System.out.println(1);
+                iv.setBackgroundColor(0x330000ff);
+                System.out.println(2);
+            }
+        });
+
+
     }
 
     private enum BLOCK {
@@ -215,5 +304,23 @@ public class DevFragment extends Fragment {
         return String.format("#%06X", (0xFFFFFF & colorInt));
     }
 
+    private void snapshot() {
+        try {
+            Calendar cal = Calendar.getInstance();
+            System.out.println(cal.getTimeInMillis());
+
+            Process sh = Runtime.getRuntime().exec("su", null, null);
+            OutputStream os = sh.getOutputStream();
+            os.write(("/system/bin/screencap -p /sdcard/Download/zookeeper.png").getBytes("ASCII"));
+            os.flush();
+            os.close();
+
+            Calendar cal2 = Calendar.getInstance();
+            System.out.println(cal2.getTimeInMillis());
+            System.out.println(cal2.getTimeInMillis() - cal.getTimeInMillis());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
 }

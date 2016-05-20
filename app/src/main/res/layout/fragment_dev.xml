@@ -12,6 +12,12 @@
         android:text="Screenshot"/>
 
     <Button
+        android:id="@+id/btn_dev_screenshot2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Screenshot 2 by root"/>
+
+    <Button
         android:id="@+id/btn_start_overlay_service"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -22,6 +28,24 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Stop Overlay Service"/>
+
+    <Button
+        android:id="@+id/btn_start_timer_service"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Start Timer Service"/>
+
+    <Button
+        android:id="@+id/btn_stop_timer_service"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Stop Timer Service"/>
+
+    <Button
+        android:id="@+id/btn_dev_test2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="TEST 2"/>
 
     <Button
         android:id="@+id/btn_dev_test"

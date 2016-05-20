@@ -1,6 +1,7 @@
 package fun.wxy.annoy_o_tron.utils;
 
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
@@ -9,8 +10,16 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.media.MediaScannerConnection;
+import android.os.Environment;
 import android.support.v4.app.Fragment;
+import android.text.format.DateFormat;
+import android.util.Log;
+import android.view.View;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -30,6 +39,7 @@ import fun.wxy.annoy_o_tron.R;
  * Created by 0_o on 2016/4/27.
  */
 public class U {
+    private static final String TAG = U.class.getSimpleName();
 
     public static Bitmap roundCorner(Bitmap bitmap, float pixels) {
         Bitmap output = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), Bitmap.Config.ARGB_8888);
@@ -131,5 +141,45 @@ public class U {
         }
 
         return result;
+    }
+
+    public static void snapshot(String fn) {
+        try {
+            Process sh = Runtime.getRuntime().exec("su", null, null);
+            OutputStream os = sh.getOutputStream();
+            os.write(("/system/bin/screencap -p /sdcard/Download/" + fn).getBytes("ASCII"));
+            os.flush();
+            os.close();
+            Log.v(TAG, "call U.snapshot(\"" + fn + "\") DONE");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public void screenshot(Activity activity, Context context) {
+        Date now = new Date();
+        String fn = DateFormat.format("yyyy-MM-dd_hh_mm_ss", now).toString();
+        String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/" + fn + ".jpg";
+
+        try {
+            View view = activity.getWindow().getDecorView().getRootView();
+            view.setDrawingCacheEnabled(true);
+            Bitmap bitmap = Bitmap.createBitmap(view.getDrawingCache());
+            view.setDrawingCacheEnabled(false);
+
+            File imageFile = new File(path);
+            FileOutputStream stream = new FileOutputStream(imageFile);
+            int quality = 100;
+            bitmap.compress(Bitmap.CompressFormat.JPEG, quality, stream);
+            stream.flush();
+            stream.close();
+
+            Log.v(TAG, "Image Saved okay!! path: " + path);
+            // 刷新 media cache, 這樣透過 MTP 才可以看到檔案
+            MediaScannerConnection.scanFile(context, new String[] { imageFile.getAbsolutePath() }, null, null);
+        } catch (Throwable e) {
+            e.printStackTrace();
+        }
     }
 }
