@@ -43,7 +43,7 @@ public class HomeFragment extends Fragment {
                 Fragment frag = null;
                 String tag = "frag_" + R.id.navi_dev;
                 if (getActivity().getSupportFragmentManager().findFragmentByTag(tag) == null) {
-                    frag = new ZookeeperFragment();
+                    frag = new DevFragment();
                 }
                 MainActivity.renderFragment(frag, tag, getFragmentManager(), v.getRootView());
             }

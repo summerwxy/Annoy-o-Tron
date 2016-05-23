@@ -14,7 +14,7 @@
 
         <item
             android:id="@+id/navi_zookeeper"
-            android:icon="@drawable/ic_expand_more_black_24dp"
+            android:icon="@drawable/ic_check_box_outline_blank_black_24dp"
             android:title="Zoo Keeper Overlay"/>
 
         <item
