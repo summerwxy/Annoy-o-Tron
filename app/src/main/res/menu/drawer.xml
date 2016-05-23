@@ -13,13 +13,15 @@
             android:title="Shipping"/>
 
         <item
+            android:id="@+id/navi_zookeeper"
+            android:icon="@drawable/ic_expand_more_black_24dp"
+            android:title="Zoo Keeper Overlay"/>
+
+        <item
             android:id="@+id/navi_dev"
             android:icon="@drawable/ic_extension_black_24dp"
-            android:title="0_o's DEV functions"/>
-        <item
-            android:id="@+id/navi_item_3"
-            android:icon="@drawable/ic_settings_black_24dp"
-            android:title="A very long title that will truncate automatic by android......."/>
+            android:title="Dev Fragment"/>
+
 
     </group>
 

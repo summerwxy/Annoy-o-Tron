@@ -1,0 +1,22 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ZookeeperFragment"
+    android:orientation="vertical">
+
+
+
+    <Button
+        android:id="@+id/btn_start_overlay_service"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Start Overlay Service"/>
+
+    <Button
+        android:id="@+id/btn_stop_overlay_service"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Stop Overlay Service"/>
+
+</LinearLayout>
