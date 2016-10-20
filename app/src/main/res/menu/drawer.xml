@@ -7,6 +7,13 @@
             android:checked="true"
             android:icon="@drawable/ic_home_black_24dp"
             android:title="Home"/>
+
+        <item
+            android:id="@+id/navi_wevideo"
+            android:checked="true"
+            android:icon="@drawable/ic_videocam_black_24dp"
+            android:title="We Video"/>
+
         <item
             android:id="@+id/navi_ship"
             android:icon="@drawable/ic_local_shipping_black_24dp"

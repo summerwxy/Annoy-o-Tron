@@ -17,9 +17,6 @@ import android.view.View;
 import android.view.MenuItem;
 import android.widget.ImageView;
 
-import com.avos.avoscloud.AVAnalytics;
-import com.avos.avoscloud.AVObject;
-
 import java.util.List;
 
 import fun.wxy.annoy_o_tron.utils.U;
@@ -34,13 +31,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        // 統計打開狀況
-        AVAnalytics.trackAppOpened(getIntent());
-        // for test
-        AVObject obj = new AVObject("TestObject");
-        obj.put("foo", "bar");
-        obj.saveInBackground();
 
 
         final DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -154,6 +144,8 @@ public class MainActivity extends AppCompatActivity {
         // TODO: NOTE ===== new menu item, code here =====
         if (existFrag == null && item.getItemId() == R.id.navi_home) {
             frag = new HomeFragment();
+        } else if (existFrag == null && item.getItemId() == R.id.navi_wevideo) {
+            frag = new WeVideoFragment();
         } else if (existFrag == null && item.getItemId() == R.id.navi_ship) {
             frag = new ShipFragment();
         }  else if (existFrag == null && item.getItemId() == R.id.navi_zookeeper) {

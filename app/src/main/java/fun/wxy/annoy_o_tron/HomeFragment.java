@@ -28,9 +28,9 @@ public class HomeFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Fragment frag = null;
-                String tag = "frag_" + R.id.navi_ship;
+                String tag = "frag_" + R.id.navi_wevideo;
                 if (getActivity().getSupportFragmentManager().findFragmentByTag(tag) == null) {
-                    frag = new ShipFragment();
+                    frag = new WeVideoFragment();
                 }
                 MainActivity.renderFragment(frag, tag, getFragmentManager(), v.getRootView());
             }
