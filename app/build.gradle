@@ -105,7 +105,7 @@ dependencies {
     compile 'de.greenrobot:greendao:2.1.0'
 }
 dependencies {
-    compile 'com.android.support:support-v4:23.+'
+    compile 'com.android.support:support-v4:25.+'
 }
 // ======================================================
 
@@ -113,9 +113,9 @@ dependencies {
 dependencies {
     compile group: 'org.bytedeco', name: 'javacv', version: '1.1'
 }
+// =================================================================
+
+// sqlcipher ==========================================================
 dependencies {
-    compile 'com.android.support:support-v4:23.+'
-}
-dependencies {
-    compile 'com.android.support:support-v4:25.+'
+    compile 'net.zetetic:android-database-sqlcipher:3.5.4@aar'
 }// =================================================================

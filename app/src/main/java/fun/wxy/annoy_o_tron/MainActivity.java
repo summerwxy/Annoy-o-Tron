@@ -1,18 +1,23 @@
 package fun.wxy.annoy_o_tron;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.view.MenuItem;
 import android.widget.ImageView;
@@ -24,6 +29,7 @@ import fun.wxy.annoy_o_tron.utils.U;
 
 // @EActivity(R.layout.activity_main)
 public class MainActivity extends AppCompatActivity {
+    private static final String TAG = MainActivity.class.getSimpleName();
 
     public final static String EXTRA_MESSAGE = "fun.wxy.annoy_o_tron.MESSAGE";
 
@@ -108,7 +114,28 @@ public class MainActivity extends AppCompatActivity {
         renderFragment(frag, tag);
 //        getSupportFragmentManager().beginTransaction().add(R.id.content_layout, frag, tag).commit();
 
+        // 檢查有沒有寫檔案權限
+        int permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
+            Log.v(TAG, "i have not Manifest.permission.WRITE_EXTERNAL_STORAGE");
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
+        }
+        // 檢查能不能讀檔案權限
+        permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE);
+        if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
+            Log.v(TAG, "i have not Manifest.permission.READ_EXTERNAL_STORAGE");
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 0);
+        }
+        // check READ_PHONE_STATE
+        permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE);
+        if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
+            Log.v(TAG, "i have not Manifest.permission.READ_PHONE_STATE");
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_PHONE_STATE}, 0);
+        }
     }
+
+
+
 
 
     /*
