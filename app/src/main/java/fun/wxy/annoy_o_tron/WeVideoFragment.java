@@ -4,9 +4,12 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.telephony.TelephonyManager;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import net.sqlcipher.Cursor;
+import net.sqlcipher.DatabaseErrorHandler;
 import net.sqlcipher.DefaultDatabaseErrorHandler;
 import net.sqlcipher.database.SQLiteDatabase;
 import net.sqlcipher.database.SQLiteDatabaseHook;
@@ -24,15 +28,24 @@ import org.w3c.dom.NodeList;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import fun.wxy.annoy_o_tron.utils.U;
 
-
+/**
+ * 放棄不寫了, SightDraftInfo 裡面多了一些規則, 找不到資料, 沒辦法自己新增資料進去
+ * 這邊只能參考解碼 EnMicroMsg.db 的部分
+ */
 public class WeVideoFragment extends Fragment {
     private static final String TAG = WeVideoFragment.class.getSimpleName();
+
+    private String wxKey = null;
 
     public WeVideoFragment() {
         // Required empty public constructor
@@ -60,6 +73,14 @@ public class WeVideoFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        wxKey = this.getKey();
+        // === request su permission ===
+        try {
+            Process p = Runtime.getRuntime().exec("su");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        // ===  ===
         Button btn = (Button) view.findViewById(R.id.wevideo_test);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -67,20 +88,72 @@ public class WeVideoFragment extends Fragment {
                 foo();
             }
         });
+
+        Button btn2 = (Button) view.findViewById(R.id.wevideo_copy_db);
+        btn2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String from_str = Environment.getDataDirectory().getAbsolutePath() + "/data/com.tencent.mm/MicroMsg/" + getWechatUuid() + "/EnMicroMsg.db";
+                File from_file = new File(from_str);
+                String to_str = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/EnMicroMsg.db";
+                File to_file = new File(to_str);
+                try {
+                    U.copyFileUsingStream(from_file, to_file);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                Snackbar.make(view, "copy database from data to download folder ok!", Snackbar.LENGTH_SHORT).show();
+            }
+        });
     }
 
 
-
     private void foo() {
-        // SUCCESS!!
-        SQLiteDatabase.loadLibs(getContext());
-        String xxx = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/EnMicroMsg.db";
-        SQLiteDatabase database = SQLiteDatabase.openOrCreateDatabase(xxx, getKey().toCharArray(), null, new WeDatabaseHook(getKey()), new DefaultDatabaseErrorHandler());
-        Cursor cur = database.rawQuery("select * from AppInfo;", null);
-        System.out.println(cur);
 
-        System.out.println("/////////////////////////////////");
+        SQLiteDatabase database = null;
+        Cursor cur = null;
+        try {
+            // SUCCESS!!
+            SQLiteDatabase.loadLibs(getContext());
+            // String xxx = Environment.getDataDirectory().getAbsolutePath() + "/data/com.tencent.mm/MicroMsg/" + this.getWechatUuid() + "/EnMicroMsg.db";
+            String xxx = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/EnMicroMsg.db";
+            database = SQLiteDatabase.openOrCreateDatabase(xxx, wxKey.toCharArray(), null, new WeDatabaseHook(), new WeDatabaseErrorHandler());
+            this.decrypt(database);
+            database.execSQL("update SightDraftInfo set fileMd5 = 'ef5180d66494b376c77a0ccdb58b775d', fileLength = 93505, fileDuration = 2, createTime = 1478060670721 where localId = 15;");
+            cur = database.rawQuery("select * from SightDraftInfo;", null);
+            // 14 | 000f61bfe19c0625d403e2f145ef88bd | 1505788323 | ef5180d66494b376c77a0ccdb58b775d | 93505 | 1 | 2 | 1478060670721
+            // 15 | f69ecd53b389270ecb0b9e2406c06cd9 | -747866693 | 61dde942fb71e3ccd2b9f980f8184ebe | 328352 | 1 | 6 | 1478060692955
+            // bc2680e0ba97728156c1af80e39d2673
+            // 666854
+            // 20
+            showTable(cur);
 
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            if (cur != null && !cur.isClosed()) {
+                cur.close();
+            }
+            if (database != null && database.isOpen()) {
+                database.close();
+            }
+        }
+        // bc2680e0ba97728156c1af80e39d2673
+        // 666854
+        // 20
+        System.out.println("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
+    }
+
+    private void showTable(Cursor cur) {
+        System.out.println(TextUtils.join(" | ", cur.getColumnNames()));
+        int cnt = cur.getColumnCount();
+        while(cur.moveToNext()) {
+            String[] cols = new String[cnt];
+            for (int i = 0; i < cur.getColumnCount(); i++) {
+                cols[i] = cur.getString(i);
+            }
+            System.out.println(TextUtils.join(" | ", cols));
+        }
     }
 
     private String getKey() {
@@ -97,6 +170,7 @@ public class WeVideoFragment extends Fragment {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = factory.newDocumentBuilder();
 
+            // TODO: 沒有檔案權限的時候, result = 0, 後續的部分會出錯!
             String path_of_xml = Environment.getDataDirectory().getAbsolutePath() + "/data/com.tencent.mm/shared_prefs/system_config_prefs.xml";
             FileInputStream fileInputStream = new FileInputStream(new File(path_of_xml));
 
@@ -133,20 +207,40 @@ public class WeVideoFragment extends Fragment {
     }
 
     private class WeDatabaseHook implements SQLiteDatabaseHook {
-        private String key;
-        public WeDatabaseHook(String key) {
-            this.key = key;
-        }
         @Override
         public void preKey(SQLiteDatabase sqLiteDatabase) {
-            sqLiteDatabase.rawExecSQL("PRAGMA key = '" + this.key + "';");
-            sqLiteDatabase.rawExecSQL("PRAGMA cipher_use_hmac = off;");
-            sqLiteDatabase.rawExecSQL("PRAGMA cipher_page_size = 1024;");
-            sqLiteDatabase.rawExecSQL("PRAGMA kdf_iter = 4000;");
-            sqLiteDatabase.rawQuery("select count(*) from sqlite_master;", new String[0]); // 不知道為什麼一定要先執行一次 不然後面會出錯 !!??
+            Log.v(TAG, "enter preKey!");
+            decrypt(sqLiteDatabase);
+            Cursor cur = sqLiteDatabase.rawQuery("select count(*) from sqlite_master;", new String[0]); // 不知道為什麼一定要先執行一次 不然後面會出錯 !!??
+            if (!cur.isClosed()) {
+                cur.close();
+            }
+            Log.v(TAG, "exit preKey!");
         }
         @Override
         public void postKey(SQLiteDatabase sqLiteDatabase) {
+        }
+    }
+
+    private void decrypt(SQLiteDatabase sqLiteDatabase) {
+        sqLiteDatabase.rawExecSQL("PRAGMA key = '" + wxKey + "';");
+        sqLiteDatabase.rawExecSQL("PRAGMA cipher_use_hmac = off;");
+        sqLiteDatabase.rawExecSQL("PRAGMA cipher_page_size = 1024;");
+        sqLiteDatabase.rawExecSQL("PRAGMA kdf_iter = 4000;");
+    }
+
+
+    private class WeDatabaseErrorHandler implements DatabaseErrorHandler {
+        @Override
+        public void onCorruption(SQLiteDatabase sqLiteDatabase) {
+            if (sqLiteDatabase.isOpen()) {
+                try {
+                    sqLiteDatabase.close();
+                } catch (Exception e) {
+                    /* ignored */
+                    Log.e(TAG, "Exception closing Database object for corrupted database, ignored", e);
+                }
+            }
         }
     }
 
