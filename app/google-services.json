@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "478798885288",
+    "firebase_url": "https://annoy-o-tron.firebaseio.com",
+    "project_id": "annoy-o-tron",
+    "storage_bucket": "annoy-o-tron.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:478798885288:android:b6ed392064d0eac4",
+        "android_client_info": {
+          "package_name": "fun.wxy.annoy_o_tron"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "478798885288-ule2vc9e8mt3gm9ofjpnr8epq7j4oadl.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "fun.wxy.annoy_o_tron",
+            "certificate_hash": "c0840681f04350ea5245198161a4e6759e17452d"
+          }
+        },
+        {
+          "client_id": "478798885288-btbidcf9boici4ug9foq3hk40e545dce.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAUsli2AI1bz3Vuv8rEMTnVVlvPSH1zAzY"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "478798885288-btbidcf9boici4ug9foq3hk40e545dce.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
