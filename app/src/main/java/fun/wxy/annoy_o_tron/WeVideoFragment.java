@@ -1,14 +1,10 @@
 package fun.wxy.annoy_o_tron;
 
-import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,7 +14,6 @@ import android.widget.Button;
 
 import net.sqlcipher.Cursor;
 import net.sqlcipher.DatabaseErrorHandler;
-import net.sqlcipher.DefaultDatabaseErrorHandler;
 import net.sqlcipher.database.SQLiteDatabase;
 import net.sqlcipher.database.SQLiteDatabaseHook;
 
@@ -28,10 +23,7 @@ import org.w3c.dom.NodeList;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;

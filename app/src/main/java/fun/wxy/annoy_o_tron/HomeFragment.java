@@ -36,6 +36,7 @@ public class HomeFragment extends Fragment {
             }
         });
 
+
         Button btn2 = (Button) view.findViewById(R.id.btn_dev);
         btn2.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -44,6 +45,19 @@ public class HomeFragment extends Fragment {
                 String tag = "frag_" + R.id.navi_dev;
                 if (getActivity().getSupportFragmentManager().findFragmentByTag(tag) == null) {
                     frag = new DevFragment();
+                }
+                MainActivity.renderFragment(frag, tag, getFragmentManager(), v.getRootView());
+            }
+        });
+
+        Button btn3 = (Button) view.findViewById(R.id.btn_run_sql);
+        btn3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Fragment frag = null;
+                String tag = "frag_" + R.id.navi_run_sql;
+                if (getActivity().getSupportFragmentManager().findFragmentByTag(tag) == null) {
+                    frag = new RunSqlFragment();
                 }
                 MainActivity.renderFragment(frag, tag, getFragmentManager(), v.getRootView());
             }

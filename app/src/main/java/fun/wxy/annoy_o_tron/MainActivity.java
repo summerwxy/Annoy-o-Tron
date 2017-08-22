@@ -171,8 +171,8 @@ public class MainActivity extends AppCompatActivity {
         // TODO: NOTE ===== new menu item, code here =====
         if (existFrag == null && item.getItemId() == R.id.navi_home) {
             frag = new HomeFragment();
-        } else if (existFrag == null && item.getItemId() == R.id.navi_wevideo) {
-            frag = new WeVideoFragment();
+//        } else if (existFrag == null && item.getItemId() == R.id.navi_wevideo) {
+//            frag = new WeVideoFragment();
         } else if (existFrag == null && item.getItemId() == R.id.navi_ship) {
             frag = new ShipFragment();
         }  else if (existFrag == null && item.getItemId() == R.id.navi_zookeeper) {

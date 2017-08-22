@@ -29,6 +29,10 @@
             android:icon="@drawable/ic_extension_black_24dp"
             android:title="Dev Fragment"/>
 
+        <item
+            android:id="@+id/navi_run_sql"
+            android:icon="@drawable/ic_image_aspect_ratio_black_24dp"
+            android:title="Run SQL"/>
 
     </group>
 

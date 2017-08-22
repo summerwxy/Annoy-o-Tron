@@ -14,16 +14,21 @@ import android.media.MediaScannerConnection;
 import android.os.Environment;
 import android.support.v4.app.Fragment;
 import android.telephony.TelephonyManager;
+import android.text.TextUtils;
 import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.View;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
@@ -31,6 +36,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -228,5 +234,31 @@ public class U {
             is.close();
             os.close();
         }
+    }
+
+
+
+    // 使用時注意, 不能在 Main Thread 直接用
+    public static String getStringFromUrl(String urlString) {
+        ArrayList<String> list = new ArrayList<String>();
+        try {
+            URL url = new URL(urlString);
+            BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
+            String inputLine;
+            while ((inputLine = in.readLine()) != null) {
+                list.add(inputLine);
+
+            }
+            in.close();
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return TextUtils.join("\r\n", list);
+    }
+
+    public static void main(String[] args) {
+
     }
 }

@@ -22,8 +22,8 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
-    compile 'com.android.support:appcompat-v7:25.0.0'
-    compile 'com.android.support:design:25.0.0'
+//    compile 'com.android.support:appcompat-v7:25.3.1'
+    compile 'com.android.support:design:25.3.1'
     compile files('libs/avoscloud-statistics-v3.13.10.jar')
     compile files('libs/avoscloud-sdk-v3.13.10.jar')
     compile files('libs/fastjson.jar')
@@ -36,7 +36,7 @@ buildscript {
     }
     dependencies {
         // replace with the current version of the Android plugin
-        classpath 'com.android.tools.build:gradle:2.2.0'
+        classpath 'com.android.tools.build:gradle:2.3.2'
         // replace with the current version of the android-apt plugin
         classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
     }
@@ -74,7 +74,7 @@ apt {
 
 // RecyclerView === =====================================
 dependencies {
-    compile 'com.android.support:recyclerview-v7:+'
+//    compile 'com.android.support:recyclerview-v7:+'
 }
 // ======================================================
 
@@ -105,7 +105,7 @@ dependencies {
     compile 'de.greenrobot:greendao:2.1.0'
 }
 dependencies {
-    compile 'com.android.support:support-v4:25.+'
+//    compile 'com.android.support:support-v4:25.+'
 }
 // ======================================================
 
@@ -118,4 +118,18 @@ dependencies {
 // sqlcipher ==========================================================
 dependencies {
     compile 'net.zetetic:android-database-sqlcipher:3.5.4@aar'
+}
+dependencies {
+//    compile 'com.android.support:support-v4:25.+'
 }// =================================================================
+
+// jsoup ==========================================================
+dependencies {
+    compile 'org.jsoup:jsoup:1.10.2'
+}// =================================================================
+
+
+dependencies {
+    compile 'com.google.firebase:firebase-database:10.0.1'
+}
+apply plugin: 'com.google.gms.google-services'
