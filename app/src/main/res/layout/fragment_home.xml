@@ -25,6 +25,11 @@
         android:layout_height="wrap_content"
         android:text="RUN SQL"/>
 
+    <Button
+        android:id="@+id/btn_firebase"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Firebase"/>
 
 
 </LinearLayout>

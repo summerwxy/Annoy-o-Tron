@@ -1,10 +1,13 @@
 package fun.wxy.annoy_o_tron;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -21,6 +24,15 @@ import android.util.Log;
 import android.view.View;
 import android.view.MenuItem;
 import android.widget.ImageView;
+
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.auth.api.signin.GoogleSignInResult;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.List;
 
@@ -132,10 +144,12 @@ public class MainActivity extends AppCompatActivity {
             Log.v(TAG, "i have not Manifest.permission.READ_PHONE_STATE");
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_PHONE_STATE}, 0);
         }
+
+        // init firebase
+        System.out.println("1111");
+        initFirebase();
+        System.out.println("222");
     }
-
-
-
 
 
     /*
@@ -239,4 +253,84 @@ public class MainActivity extends AppCompatActivity {
         manager.beginTransaction().replace(R.id.content_replace_layout, frag).commit();
     }
 
+
+
+    // ===== signin =====
+    private FirebaseAuth mAuth;
+    private GoogleApiClient mGoogleApiClient;
+
+
+    private void initFirebase() {
+        // Configure Google Sign In
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build();
+        // google api client
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .enableAutoManage(this, new GoogleApiClient.OnConnectionFailedListener() {
+                    @Override
+                    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+                        Log.d(TAG, "onConnectionFailed: " + connectionResult);
+                    }
+                })
+                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+                .build();
+        // firebase auth
+        mAuth = FirebaseAuth.getInstance();
+
+        NavigationView navi = (NavigationView) findViewById(R.id.navigation_view);
+        navi.getMenu().add("AAAAAAA");
+        navi.getMenu().addSubMenu("LALALA");
+        System.out.println("LALALA");
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        // Check if user is signed in (non-null) and update UI accordingly.
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        updateUI(currentUser);
+    }
+
+
+
+    private void updateUI(FirebaseUser user) {
+////        hideProgressDialog();
+//        if (user != null) {
+////            mStatusTextView.setText(getString(R.string.google_status_fmt, user.getEmail()));
+////            mDetailTextView.setText(getString(R.string.firebase_status_fmt, user.getUid()));
+//            mStatusTextView.setText(user.getEmail());
+//            mDetailTextView.setText(user.getUid());
+//
+//            findViewById(R.id.sign_in_button).setVisibility(View.GONE);
+//            findViewById(R.id.sign_out_and_disconnect).setVisibility(View.VISIBLE);
+//        } else {
+//            mStatusTextView.setText("sign up");
+//            mDetailTextView.setText(null);
+//
+//            findViewById(R.id.sign_in_button).setVisibility(View.VISIBLE);
+//            findViewById(R.id.sign_out_and_disconnect).setVisibility(View.GONE);
+//        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
+//        if (requestCode == RC_SIGN_IN) {
+//            GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
+//            if (result.isSuccess()) {
+//                // Google Sign In was successful, authenticate with Firebase
+//                GoogleSignInAccount account = result.getSignInAccount();
+//                firebaseAuthWithGoogle(account);
+//            } else {
+//                // Google Sign In failed, update UI appropriately
+//                // [START_EXCLUDE]
+//                updateUI(null);
+//                // [END_EXCLUDE]
+//            }
+//        }
+    }
 }

@@ -1,15 +1,32 @@
 package fun.wxy.annoy_o_tron;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
+
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import static com.google.android.gms.internal.zzs.TAG;
 
 
 public class HomeFragment extends Fragment {
+
+    private static final String TAG = HomeFragment.class.getSimpleName();
 
     public HomeFragment() {
     }
@@ -63,5 +80,31 @@ public class HomeFragment extends Fragment {
             }
         });
 
+        Button btn4 = (Button) view.findViewById(R.id.btn_firebase);
+        btn4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                /*
+                // Write a message to the database
+                FirebaseDatabase database = FirebaseDatabase.getInstance();
+                DatabaseReference myRef = database.getReference("message");
+
+                myRef.setValue("Hello, World!");
+                System.out.println("Hello, World!!");
+                */
+
+//                Intent myIntent = new Intent(view.getContext(), GoogleSignInActivity.class);
+//                view.getContext().startActivity(myIntent);
+
+            }
+        });
+
+
     }
+
+
+
+
+
 }

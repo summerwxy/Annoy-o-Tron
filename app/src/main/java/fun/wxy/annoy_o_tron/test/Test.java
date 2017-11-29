@@ -3,6 +3,9 @@ package fun.wxy.annoy_o_tron.test;
 //import org.bytedeco.javacpp.opencv_core;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by 0_o on 2016/5/16.
  */
@@ -17,7 +20,16 @@ public class Test {
         //System.out.println(small);
         // opencv_core.IplImage result = org.bytedeco.javacpp.opencv_core.cvCreateImage(, 1, 1);
 
+        Test test = new Test();
+        List<Integer> list = test.getList();
+    }
 
+
+
+    public List getList() {
+        List list = new ArrayList();
+        list.add("foo");
+        return list;
     }
 
 }

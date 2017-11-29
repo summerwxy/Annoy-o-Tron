@@ -132,4 +132,11 @@ dependencies {
 dependencies {
     compile 'com.google.firebase:firebase-database:10.0.1'
 }
+dependencies {
+    compile 'com.google.firebase:firebase-auth:10.0.1'
+    compile 'com.google.android.gms:play-services-auth:10.0.1'
+}
+dependencies {
+    compile 'com.android.support.constraint:constraint-layout:+'
+}
 apply plugin: 'com.google.gms.google-services'
